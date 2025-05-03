@@ -1,7 +1,7 @@
 import Logo from "../../img/logo/randomovie.svg";
 import React, {useCallback, useEffect, useState} from "react";
 
-import Select from "../form/Select";
+import Select from "./Select";
 import Score from "../Score";
 import {getCountries, getGenres, getLanguages, getProviders} from "../../api/actions";
 import Banner from "./Banner";

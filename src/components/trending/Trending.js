@@ -1,4 +1,4 @@
-import Tabs from "../Tabs";
+import Tabs from "./Tabs";
 import React, {useEffect, useState} from "react";
 import TrendingMovie from "./TrendingMovie";
 import {getTrendingMovies} from "../../api/actions";
