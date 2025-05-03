@@ -6,6 +6,7 @@ import Hero from "./hero/Hero";
 import Trending from "./trending/Trending";
 import Footer from "./Footer";
 import PopUp from "./popup/PopUp";
+import {getRandomMovieID} from "../api/actions";
 
 const defaultQueryURL = global.config.API.URL + "discover/movie" + global.config.API.KEY +
     "&language=" + global.config.LANGUAGE +
@@ -32,29 +33,7 @@ export default function App() {
     const isSmallScreen = useMediaQuery({query: '(max-width: 900px) or (max-height: 800px)' })
 
     // GETTERS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    const getRandomPage = async (url) => {
-        const response = await fetch(url + "&page=1");
-        const data = await response.json();
 
-        return Math.floor(Math.random() * (Math.min(data.total_pages, global.config.API.MAX_PAGES))) + 1;
-    }
-
-    const getRandomMovieID = async (url) => {
-        const pageNumber = await getRandomPage(url);
-
-        const response = await fetch(url + "&page=" + pageNumber);
-        const data = await response.json();
-
-        // console.log(data)
-
-        if (!data.results.length) {
-            alert("Sorry! We could not find any movies with your chosen attributes!");
-            return null
-        } else {
-            return data.results[Math.floor(Math.random() * data.results.length)].id;
-        }
-
-    }
 
     // FUNCTIONS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     useEffect(() => {
