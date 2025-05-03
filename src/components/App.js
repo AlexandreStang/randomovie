@@ -31,10 +31,7 @@ export default function App() {
 
     const [scrollPosition, setScrollPosition] = useState(window.scrollY)
     const isSmallScreen = useMediaQuery({query: '(max-width: 900px) or (max-height: 800px)' })
-
-    // GETTERS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-
+    
     // FUNCTIONS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     useEffect(() => {
         if (movieID !== "" && !isSmallScreen) {
