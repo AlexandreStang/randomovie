@@ -5,7 +5,7 @@ import '../config.js';
 import Hero from "./hero/Hero";
 import Trending from "./trending/Trending";
 import Footer from "./Footer";
-import PopUp from "./section/PopUp";
+import PopUp from "./popup/PopUp";
 
 const defaultQueryURL = global.config.API.URL + "discover/movie" + global.config.API.KEY +
     "&language=" + global.config.LANGUAGE +

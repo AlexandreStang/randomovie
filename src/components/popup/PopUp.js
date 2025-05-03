@@ -1,16 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import '../../config.js';
+import {getMovieCredits, getMovieDetails, getMovieReleaseDates, getMovieTrailers} from "../../api/actions";
+import {calculateRuntime} from "../../libs/utils";
+import CrewList from "./CrewList";
+import CastList from "./CastList";
 // import Score from "../Score";
-
-const crewConfig = [
-    {title: "Directed by", job: "Director"},
-    {title: "Screenplay by", job: "Screenplay"},
-    {title: "Story by", job: "Story"},
-    {title: "Characters by", job: "Characters"},
-    {title: "Produced by", job: "Producer"},
-    {title: "Edited by", job: "Editor"},
-    {title: "Music by", job: "Original Music Composer"},
-]
 
 export default function PopUp({movieID, onClosePopup, canTryAgain, onTryAgain, isSmallScreen}) {
 
@@ -20,47 +14,6 @@ export default function PopUp({movieID, onClosePopup, canTryAgain, onTryAgain, i
     const [movieCertification, setMovieCertification] = useState([""]);
     const [movieTrailer, setMovieTrailer] = useState([""])
 
-    // GETTERS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    const getMovieDetails = async (movieID) => {
-        const response = await fetch(global.config.API.URL + "movie/" + movieID +
-            global.config.API.KEY + "&language=" + global.config.LANGUAGE)
-        const data = await response.json();
-
-        // console.log("MovieDetails", data)
-
-        return data;
-    }
-
-    const getMovieCredits = async (movieID) => {
-        const response = await fetch(global.config.API.URL + "movie/" + movieID + "/credits" +
-            global.config.API.KEY + "&language=" + global.config.LANGUAGE)
-        const data = await response.json();
-
-        // console.log("MovieCredits", data)
-
-        return data;
-    }
-
-    const getMovieReleaseDates = async (movieID) => {
-        const response = await fetch(global.config.API.URL + "movie/" + movieID + "/release_dates" +
-            global.config.API.KEY + "&language=" + global.config.LANGUAGE)
-        const data = await response.json();
-
-        // console.log("MovieReleaseDate", data)
-
-        return data.results;
-    }
-
-    const getMovieTrailers = async (movieID) => {
-        const response = await fetch(global.config.API.URL + "movie/" + movieID + "/videos" +
-            global.config.API.KEY)
-        const data = await response.json();
-
-        // console.log("MovieTrailer", data)
-
-        return data.results
-    }
-
     // FUNCTIONS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     useEffect(() => {
         getMovieDetails(movieID).then(data => setMovieDetails(data));
@@ -68,18 +21,6 @@ export default function PopUp({movieID, onClosePopup, canTryAgain, onTryAgain, i
         getMovieReleaseDates(movieID).then(data => findMovieCertification(data));
         getMovieTrailers(movieID).then(data => findMovieTrailer(data));
     }, [movieID]);
-
-    function calculateRuntime(time) {
-        const minutes = time % 60;
-
-        if (time < 60) {
-            return (minutes + "m");
-        }
-
-        var hours = Math.floor(time / 60);
-
-        return (hours + "h " + minutes + "m");
-    }
 
     function findMovieCertification(allReleases) {
         try {
@@ -185,11 +126,8 @@ export default function PopUp({movieID, onClosePopup, canTryAgain, onTryAgain, i
                         </div>
                         {/*PEOPLE*/}
                         <div className="people">
-
                             <CrewList crew={movieCredits.crew} maxJobs={4}></CrewList>
-
                             <CastList cast={movieCredits.cast} maxCast={6}></CastList>
-
                         </div>
                     </div>
                 </div>
@@ -200,52 +138,7 @@ export default function PopUp({movieID, onClosePopup, canTryAgain, onTryAgain, i
     )
 }
 
-function CrewList({crew, maxJobs}) {
 
-    const filteredConfigs = crewConfig.filter(config =>
-        (crew || []).some(crewMember => crewMember.job === config.job)
-    ).slice(0, maxJobs);
 
-    return (
-        <>
-            {filteredConfigs.map((config) => (
-                <Crew key={config.job} crew={crew} config={config} maxCrewMembers={3}/>
-            ))}
-        </>
-    );
-}
 
-function Crew({crew, config, maxCrewMembers}) {
-    const {title, job} = config;
 
-    const filteredCrew = (crew || []).filter((crewMember) => crewMember.job === job);
-
-    if (filteredCrew.length === 0) {
-        return null;
-    }
-
-    return (
-        <ul>
-            <li><h4>{title}</h4></li>
-            {filteredCrew.slice(0, maxCrewMembers).map((crewMember) => (
-                <li key={crewMember.id}>{crewMember.name}</li>
-            ))}
-            {/*{filteredCrew.length > maxCrewMembers ? <li>. . .</li> : ""}*/}
-        </ul>
-    );
-}
-
-function CastList({cast, maxCast}) {
-
-    if ((cast || []).length === 0) {
-        return null
-    }
-
-    return (
-        <ul className="full-row last-row">
-            <li><h4>Cast</h4></li>
-            {cast ? cast.slice(0, maxCast).map(
-                (castMember) => <li key={castMember.id}>{castMember.name}</li>) : <li>Unknown</li>}
-        </ul>
-    )
-}

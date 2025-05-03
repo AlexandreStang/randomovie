@@ -50,3 +50,43 @@ export const getTrendingMovies = async (timeWindow) => {
 
     return data.results;
 }
+
+export const getMovieDetails = async (movieID) => {
+    const response = await fetch(global.config.API.URL + "movie/" + movieID +
+        global.config.API.KEY + "&language=" + global.config.LANGUAGE)
+    const data = await response.json();
+
+    // console.log("MovieDetails", data)
+
+    return data;
+}
+
+export const getMovieCredits = async (movieID) => {
+    const response = await fetch(global.config.API.URL + "movie/" + movieID + "/credits" +
+        global.config.API.KEY + "&language=" + global.config.LANGUAGE)
+    const data = await response.json();
+
+    // console.log("MovieCredits", data)
+
+    return data;
+}
+
+export const getMovieReleaseDates = async (movieID) => {
+    const response = await fetch(global.config.API.URL + "movie/" + movieID + "/release_dates" +
+        global.config.API.KEY + "&language=" + global.config.LANGUAGE)
+    const data = await response.json();
+
+    // console.log("MovieReleaseDate", data)
+
+    return data.results;
+}
+
+export const getMovieTrailers = async (movieID) => {
+    const response = await fetch(global.config.API.URL + "movie/" + movieID + "/videos" +
+        global.config.API.KEY)
+    const data = await response.json();
+
+    // console.log("MovieTrailer", data)
+
+    return data.results
+}
