@@ -42,3 +42,11 @@ export const getBanner = async () => {
 
     return data.results[rand].backdrop_path;
 }
+
+export const getTrendingMovies = async (timeWindow) => {
+    const response = await fetch(global.config.API.URL + "trending/movie/" + timeWindow +
+        global.config.API.KEY + "&language=" + global.config.LANGUAGE);
+    const data = await response.json();
+
+    return data.results;
+}

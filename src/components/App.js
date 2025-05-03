@@ -3,8 +3,8 @@ import { useMediaQuery } from 'react-responsive';
 import '../css/styles.css';
 import '../config.js';
 import Hero from "./hero/Hero";
-import Trending from "./section/Trending";
-import Footer from "./section/Footer";
+import Trending from "./trending/Trending";
+import Footer from "./Footer";
 import PopUp from "./section/PopUp";
 
 const defaultQueryURL = global.config.API.URL + "discover/movie" + global.config.API.KEY +
