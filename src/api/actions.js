@@ -31,3 +31,14 @@ export const getProviders = async (country) => {
 
     return data.results;
 }
+
+export const getBanner = async () => {
+    const response = await fetch(global.config.API.URL +
+        "trending/movie/" +
+        global.config.API.TIME_WINDOW.WEEK + global.config.API.KEY);
+    const data = await response.json();
+
+    const rand = Math.floor(Math.random() * data.results.length);
+
+    return data.results[rand].backdrop_path;
+}

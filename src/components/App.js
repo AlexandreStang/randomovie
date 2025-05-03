@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { useMediaQuery } from 'react-responsive';
 import '../css/styles.css';
 import '../config.js';
-import Hero from "./section/Hero";
+import Hero from "./hero/Hero";
 import Trending from "./section/Trending";
 import Footer from "./section/Footer";
 import PopUp from "./section/PopUp";
