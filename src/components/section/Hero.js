@@ -3,75 +3,35 @@ import React, {useCallback, useEffect, useState} from "react";
 
 import Select from "../form/Select";
 import Score from "../Score";
+import {getCountries, getGenres, getLanguages, getProviders} from "../../api/actions";
 
 const minYear = 1920;
 const maxYear = new Date().getFullYear()
-// const maxLength = 400
 const maxProviders = 10;
 const defaultScore = 50;
-// const defaultLength = maxLength/2
 
 export default function Hero({onSubmit}) {
 
     // STATES - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    const [languages, setLanguages] = useState([])
-    const [genres, setGenres] = useState([]);
-    const [countries, setCountries] = useState([])
+    const [languages, setLanguages] = useState()
+    const [genres, setGenres] = useState();
+    const [countries, setCountries] = useState()
     const [providers, setProviders] = useState([]);
     const [formData, setFormData] = useState({
         language: "",
         genre_id: "",
-        // min_release_year: minYear,
         max_release_year: maxYear,
         min_score: defaultScore,
-        // max_length: defaultLength,
         country: "",
         provider_id: ""
     });
-
-    // GETTERS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    const getLanguages = useCallback(async () => {
-        const response = await fetch(
-            global.config.API.URL + "configuration/languages" + global.config.API.KEY + "&language=" + global.config.LANGUAGE
-        );
-        const data = await response.json();
-        return sortData(data.filter((lang) => lang.name !== ""), "english_name");
-    }, []);
-
-    const getGenres = useCallback(async () => {
-        const response = await fetch(
-            global.config.API.URL + "genre/movie/list" + global.config.API.KEY + "&language=" + global.config.LANGUAGE
-        );
-        const data = await response.json();
-        return data.genres;
-    }, []);
-
-    const getCountries = useCallback(async () => {
-        const response = await fetch(
-            global.config.API.URL + "watch/providers/regions" + global.config.API.KEY + "&language=" + global.config.LANGUAGE
-        );
-        const data = await response.json();
-        return sortData(data.results, "english_name");
-    }, []);
-
-    const getProviders = async (country) => {
-        const response = await fetch(global.config.API.URL + "watch/providers/movie" + global.config.API.KEY +
-            "&language=" + global.config.LANGUAGE + "&watch_region=" + country);
-        const data = await response.json();
-
-        return data.results;
-    }
 
     // FUNCTIONS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     useEffect(() => {
         getLanguages().then(data => setLanguages(data));
         getGenres().then(data => setGenres(data));
         getCountries().then(data => setCountries(data));
-    }, [getLanguages, getGenres, getCountries]);
-
-    function sortData(data, value) {
-        return data.sort((a, b) => a[value].localeCompare(b[value]))
-    }
+    }, []);
 
     const handleLanguageChange = useCallback((selectedValue) => {
         setFormData((prevData) => ({
@@ -103,8 +63,7 @@ export default function Hero({onSubmit}) {
     }, []);
 
     function handleSubmit() {
-        const formDataCopy = { ...formData };
-        // formDataCopy.min_release_year += "-01-01"
+        const formDataCopy = {...formData};
         formDataCopy.max_release_year += "-12-31"
         formDataCopy.min_score /= 10;
         onSubmit(formDataCopy)
@@ -140,16 +99,6 @@ export default function Hero({onSubmit}) {
                                 onChangeOption={handleGenreChange}>
                             </Select>
 
-                            {/*<div className="form-item">*/}
-                            {/*    <label htmlFor="min-year-input">Min. Release Year</label>*/}
-                            {/*    <input type="number" min={minYear} max={new Date().getFullYear()}*/}
-                            {/*           step="1" name="min-year"*/}
-                            {/*           id="min-year-input"*/}
-                            {/*           value={formData.min_release_year}*/}
-                            {/*           onChange={(e) =>*/}
-                            {/*               setFormData({...formData, min_release_year: e.target.value})}/>*/}
-                            {/*</div>*/}
-
                             <div className="form-item">
                                 <label htmlFor="max-year-input">Max. Release Year</label>
                                 <input type="number" min={minYear} max={maxYear}
@@ -163,7 +112,7 @@ export default function Hero({onSubmit}) {
                             <div className="form-item">
                                 <div className="range-label"><label htmlFor="min-score-input">Min. User
                                     Score</label>
-                                <Score percentage={formData.min_score}></Score>
+                                    <Score percentage={formData.min_score}></Score>
                                 </div>
                                 <input type="range" min="0" max="100" step="1" placeholder={defaultScore}
                                        name="min-score"
@@ -172,18 +121,6 @@ export default function Hero({onSubmit}) {
                                        onChange={(e) =>
                                            setFormData({...formData, min_score: e.target.value})}/>
                             </div>
-
-                            {/*<div className="form-item">*/}
-                            {/*    <div className="range-label"><label htmlFor="max-length-input">Max. Length</label>*/}
-                            {/*        <Score percentage={formData.max_length}></Score>*/}
-                            {/*    </div>*/}
-                            {/*    <input type="range" min="0" max={maxLength} step="1" placeholder={defaultLength}*/}
-                            {/*           name="max-length"*/}
-                            {/*           id="max-length-input"*/}
-                            {/*           value={formData.max_length}*/}
-                            {/*           onChange={(e) =>*/}
-                            {/*               setFormData({...formData, max_length: e.target.value})}/>*/}
-                            {/*</div>*/}
 
                             <Select
                                 data={countries}
@@ -199,10 +136,6 @@ export default function Hero({onSubmit}) {
                                 maxOptions={maxProviders}>
                             </Select>
 
-                            {/*<div className="form-item checkbox-container">*/}
-                            {/*    <input type="checkbox" name="popular" id="popular-input"/>*/}
-                            {/*    <label htmlFor="popular-input">Find me something popular at the moment</label>*/}
-                            {/*</div>*/}
                         </div>
 
                     </form>

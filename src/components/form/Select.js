@@ -29,7 +29,7 @@ export default function Select({data, config, onChangeOption, isDisabled = false
                     onChange={(e) => updateValue(e.target.value)}
                     disabled={isDisabled}>
                     <option value=""></option>
-                    {data.slice(0, maxOptions).map((item) => (
+                    {data && data.slice(0, maxOptions).map((item) => (
                         <option value={item[value]}
                                 key={item[value]}>
                             {item[name]}
